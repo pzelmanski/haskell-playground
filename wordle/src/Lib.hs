@@ -3,6 +3,7 @@ module Lib
     ) where
 
 import System.Random 
+  (randomR, getStdGen)
 
 add :: Int -> Int -> Int
 add x y = x + y
@@ -18,8 +19,11 @@ data Choice = Rock | Paper | Scissors
 
 someFunc :: IO ()
 someFunc = do
-        let uniformR = uniformR (0, 7)
         let result = inc $ add 1 2 
         let result2 = addInc 3 3
-        putStrLn ("someFunc result: " ++ show result ++ " || " ++ show result2 ++ " || " ++ show uniformR)
+        g <- getStdGen
+        let v = 5
+        let randomNumber :: Integer
+            randomNumber = fst $ randomR (0, 10) g
+        putStrLn ("someFunc result: " ++ show result ++ " || " ++ show result2 ++ " || " ++ show randomNumber)
 
