@@ -22,7 +22,6 @@ someFunc = do
         let result = inc $ add 1 2 
         let result2 = addInc 3 3
         g <- getStdGen
-        let v = 5
         let randomNumber :: Integer
             randomNumber = fst $ randomR (0, 10) g
         putStrLn ("someFunc result: " ++ show result ++ " || " ++ show result2 ++ " || " ++ show randomNumber)
