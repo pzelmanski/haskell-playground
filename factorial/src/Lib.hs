@@ -18,5 +18,6 @@ someFunc = do
     g <- getStdGen
     let (rand, _) = randomR (1, 20) g
     let v = factorial rand
+    
     let v' = factorial' rand
     putStrLn ("Factorial of " ++ show rand ++ " is " ++ show v ++ " and " ++ show v')
