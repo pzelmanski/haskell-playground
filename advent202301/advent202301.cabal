@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      PartTwo
   other-modules:
       Paths_advent202301
   autogen-modules:
@@ -35,6 +36,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
+    , text
   default-language: Haskell2010
 
 executable advent202301-exe
@@ -49,6 +52,8 @@ executable advent202301-exe
   build-depends:
       advent202301
     , base >=4.7 && <5
+    , containers
+    , text
   default-language: Haskell2010
 
 test-suite advent202301-test
@@ -64,4 +69,6 @@ test-suite advent202301-test
   build-depends:
       advent202301
     , base >=4.7 && <5
+    , containers
+    , text
   default-language: Haskell2010

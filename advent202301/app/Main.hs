@@ -1,6 +1,9 @@
 module Main (main) where
 
 import Lib
+import PartTwo (calculate)
 
 main :: IO ()
-main = someFunc
+main = do
+    calculate
+    --someFunc
