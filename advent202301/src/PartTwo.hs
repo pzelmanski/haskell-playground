@@ -3,29 +3,28 @@ module PartTwo
     where
 
 import Text.Read
-import Data.Map (Map)
 import qualified Data.Text as T (pack, unpack, replace)
 
 
-first :: String -> Int
-first [] = -1
-first (x:xs) =
+getFirstDigit :: String -> Int
+getFirstDigit [] = -1
+getFirstDigit (x:xs) =
     let maybe = readMaybe [x] :: Maybe Int
     in case maybe of
-        Just x -> x
-        Nothing -> first xs
+        Just y -> y
+        Nothing -> getFirstDigit xs
 
 reverse' :: String -> String
-reverse' x = foldl (\acc x -> x:acc) "" x
+reverse' x = foldl (\acc y -> y:acc) "" x
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "actual-input.txt"
     let v1 = do
-            map (first . reverse') . lines
+            map (getFirstDigit . reverse') . lines
             $ input
     let v2 = do
-            map ((*10) . first) . lines
+            map ((*10) . getFirstDigit) . lines
             $ input
     let zipped = zipWith (+) v1 v2
     print (zipWith (+) v1 v2)
@@ -52,10 +51,10 @@ calculate = do
     print ww
 
     let v1 = do
-            map (first . reverse') . lines
+            map (getFirstDigit . reverse') . lines
             $ ww 
     let v2 = do
-            map ((*10) . first) . lines
+            map ((*10) . getFirstDigit) . lines
             $ ww
     let zipped = zipWith (+) v1 v2
     print (zipWith (+) v1 v2)
