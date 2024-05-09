@@ -22,16 +22,59 @@ format input = do
                 $ input
     result
 
+getGames :: String -> [String]
+getGames input = lines $ input
+
+data Game = Game
+    { gameNumber :: Int
+    , maxRed :: Int
+    , maxGreen :: Int
+    , maxBlue :: Int
+    }
+    deriving (Show)
+
+splitString :: Char -> String -> [String]
+splitString _ [] = []
+splitString splitBy xs =
+    if head xs == splitBy
+        then splitString splitBy (tail xs)
+        else
+            e : splitString splitBy es
+  where
+    (e, es) = break (== splitBy) xs
+
+-- getMax :: String -> String -> Int
+-- getMax color game = do
+-- split game by :, take tail
+-- split remainder by ;
+-- split each individual list by ,
+-- check the color of each element
+-- if color matches, take the number
+-- do max of numbers
+--    game
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "input1-test.txt"
+
+    let games = getGames input
+    print ("Games: " ++ show games)
+
+    let split =
+            map (splitString ';') 
+            . concatMap (splitString ':') 
+            $ games
+    print (show split)
+
+    let split2 = games >>= (splitString ';') >>= (splitString ':')
+    print ("Split2: " ++ show split2)
+
     let formatted = format input
 
     print ("first: " ++ show formatted)
 
-    let gameNumbers =  map getGameNumber $ formatted
-    
+    let gameNumbers = map getGameNumber $ formatted
+
     print gameNumbers
 
     -- print input
