@@ -2,8 +2,7 @@ module Lib (
     someFunc,
 ) where
 
-removeChar :: Char -> String -> String
-removeChar c xs = [x | x <- xs, not (x `elem` [c])]
+import Utils (splitString, removeChar)
 
 getGameNumber :: [String] -> Int
 getGameNumber [] = 0
@@ -22,9 +21,6 @@ format input = do
                 $ input
     result
 
-getGames :: String -> [String]
-getGames input = lines $ input
-
 data Game = Game
     { gameNumber :: Int
     , maxRed :: Int
@@ -33,61 +29,27 @@ data Game = Game
     }
     deriving (Show)
 
-splitString :: Char -> String -> [String]
-splitString _ [] = []
-splitString splitBy xs =
-    if head xs == splitBy
-        then splitString splitBy (tail xs)
-        else
-            e : splitString splitBy es
-  where
-    (e, es) = break (== splitBy) xs
 
--- getMax :: String -> String -> Int
--- getMax color game = do
--- split game by :, take tail
--- split remainder by ;
--- split each individual list by ,
--- check the color of each element
--- if color matches, take the number
--- do max of numbers
---    game
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "input1-test.txt"
 
-    let games = getGames input
-    -- print ("Games: " ++ show games)
+    let games = lines input
 
-    let split =
-            map (splitString ';')
-                . concatMap (splitString ':')
-                $ games
-    -- print (show split)
-
-    let split2 = games >>= (splitString ';') >>= (splitString ':')
-    -- print ("Split2: " ++ show split2)
-
-    -- let split3 = map (splitString ';') . ((splitString ':') >>=) $ games
-
-    let bind = games >>= (splitString ':')
-    print ("bind: " ++ show bind)
-
-    let mapp = map (splitString ';') $ bind
-    print ("mapp: " ++ show mapp)
-
-    let bm = map (splitString ';') $ (games >>= (splitString ':'))
+    let bm = map (splitString ';') (games >>= splitString ':')
     print ("bm: " ++ show bm)
+    print "//"
 
-    let mapmap = map (map (splitString ':')) . map (splitString ';') $ games
+    let mapmap = map (map (splitString ':') . splitString ';') games
     print ("mapmap: " ++ show mapmap)
+    print "//"
 
     let formatted = format input
 
     -- print ("first: " ++ show formatted)
 
-    let gameNumbers = map getGameNumber $ formatted
+    let gameNumbers = map getGameNumber formatted
 
     print gameNumbers
 
