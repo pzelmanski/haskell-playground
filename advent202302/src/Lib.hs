@@ -2,7 +2,7 @@ module Lib (
     someFunc,
 ) where
 
-import Utils (splitString, removeChar)
+import Utils (removeChar, splitString)
 
 getGameNumber :: [String] -> Int
 getGameNumber [] = 0
@@ -21,19 +21,45 @@ format input = do
                 $ input
     result
 
+newtype GameNumber = GameNumber {gnumber :: Int} deriving (Show)
+newtype Red = Red {red :: Int} deriving (Show)
+newtype Green = Green {green :: Int} deriving (Show)
+newtype Blue = Blue {blue :: Int} deriving (Show)
+
 data Game = Game
-    { gameNumber :: Int
-    , maxRed :: Int
-    , maxGreen :: Int
-    , maxBlue :: Int
+    { gameNumber :: GameNumber
+    , maxRed :: Red
+    , maxGreen :: Green 
+    , maxBlue :: Blue
     }
     deriving (Show)
 
+getGame :: Game
+getGame = Game (GameNumber 6) (Red 4) (Green 3) (Blue 2)
 
+
+getSingleGame :: String -> Game
+getSingleGame game = do
+    let split = map (splitString ';') (splitString ':' game)
+    getGame
+        
+    
+
+getGames :: [String] -> [Game]
+getGames games = do
+    map getSingleGame games 
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "input1-test.txt"
+    
+    print (show (getGames (lines input)))
+
+    print (show input)
+    print "//"
+
+    print (show getGame)
+    print "//"
 
     let games = lines input
 
