@@ -3,14 +3,15 @@ module Lib (
 ) where
 
 import Utils (removeChar, splitString)
+import Debug.Trace
 
-getGameNumber :: [String] -> Int
-getGameNumber [] = 0
-getGameNumber game =
-    read
-        . removeChar ':'
-        $ game !! 2 ::
-        Int
+-- getGameNumber :: [String] -> Int
+-- getGameNumber [] = 0
+-- getGameNumber game =
+--     read
+--         . removeChar ':'
+--         $ game !! 2 ::
+--         Int
 
 format :: String -> [[String]]
 format input = do
@@ -29,55 +30,68 @@ newtype Blue = Blue {blue :: Int} deriving (Show)
 data Game = Game
     { gameNumber :: GameNumber
     , maxRed :: Red
-    , maxGreen :: Green 
+    , maxGreen :: Green
     , maxBlue :: Blue
     }
     deriving (Show)
+
+data SingleDraft = SingleDraft
+    { draftRed :: Red
+    , draftGreen :: Green
+    , draftBlue :: Blue } deriving (Show)
 
 getGame :: Game
 getGame = Game (GameNumber 6) (Red 4) (Green 3) (Blue 2)
 
 
-getSingleGame :: String -> Game
+getGameNumber gameNumberPart = do
+    let ww = (last (gameNumberPart))
+    let gameNumber = read (head . reverse . words $ ww) :: Int
+    gameNumber
+
+getDraft colors = do
+    -- trace ("COLORS: " ++ show colors) $
+    --     SingleDraft (Red 0) (Green 0) (Blue 0)
+    let ww = (splitString ',') colors 
+    SingleDraft (Red 0) (Green 0) (Blue 0)
+
+-- getSingleGame :: String -> Game
 getSingleGame game = do
     let split = map (splitString ';') (splitString ':' game)
-    getGame
-        
-    
+    let gameNumber = getGameNumber (head split)
+    let colorsPart = head (tail split)
+    let drafted = trace ("colors part: " ++ show colorsPart) $ map (getDraft) colorsPart
+    let maxRed = draftRed (head drafted)
+    let maxGreen = draftGreen (head drafted)
+    let maxBlue = draftBlue (head drafted)
+    Game (GameNumber gameNumber) maxRed maxGreen maxBlue
 
-getGames :: [String] -> [Game]
+    -- trace ("end: " ++ show game) $ game
+
+-- getGames :: [String] -> [Game]
 getGames games = do
-    map getSingleGame games 
+      trace ("++" ++ show games) $ map getSingleGame games
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "input1-test.txt"
-    
-    print (show (getGames (lines input)))
+    let lined = lines input
+    print lined
+    print ""
+    print ""
 
-    print (show input)
-    print "//"
+    print ( (getGames (lined)))
 
-    print (show getGame)
-    print "//"
-
-    let games = lines input
-
-    let bm = map (splitString ';') (games >>= splitString ':')
-    print ("bm: " ++ show bm)
-    print "//"
-
-    let mapmap = map (map (splitString ':') . splitString ';') games
-    print ("mapmap: " ++ show mapmap)
-    print "//"
+    -- print ""
+    -- print (show input)
+    -- print "//"
 
     let formatted = format input
 
-    -- print ("first: " ++ show formatted)
 
-    let gameNumbers = map getGameNumber formatted
+    -- let gameNumbers = map getGameNumber formatted
 
-    print gameNumbers
+    -- print gameNumbers
 
     -- print input
     print "Goodbye"
