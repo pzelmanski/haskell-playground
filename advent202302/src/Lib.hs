@@ -2,8 +2,9 @@ module Lib (
     someFunc,
 ) where
 
-import Utils (removeChar, splitString)
+import Data.Maybe
 import Debug.Trace
+import Utils (removeChar, splitString)
 
 -- getGameNumber :: [String] -> Int
 -- getGameNumber [] = 0
@@ -38,22 +39,46 @@ data Game = Game
 data SingleDraft = SingleDraft
     { draftRed :: Red
     , draftGreen :: Green
-    , draftBlue :: Blue } deriving (Show)
+    , draftBlue :: Blue
+    }
+    deriving (Show)
 
 getGame :: Game
 getGame = Game (GameNumber 6) (Red 4) (Green 3) (Blue 2)
 
+strEq :: String -> String -> Bool
+strEq [] [] = True
+strEq [] [_] = False
+strEq [_] [] = False
+strEq (a : as) (b : bs) = (a == b) && strEq as bs
 
 getGameNumber gameNumberPart = do
     let ww = (last (gameNumberPart))
     let gameNumber = read (head . reverse . words $ ww) :: Int
     gameNumber
 
+listToTouple :: [String] -> (Int, String)
+listToTouple [x, y] = (read x :: Int, y)
+listToTouple _ = (0, "")
+
+
 getDraft colors = do
     -- trace ("COLORS: " ++ show colors) $
     --     SingleDraft (Red 0) (Green 0) (Blue 0)
-    let ww = (splitString ',') colors 
-    SingleDraft (Red 0) (Green 0) (Blue 0)
+    let ww = splitString ',' colors
+    let kk = map (listToTouple . words) ww
+    -- TODO: I have a list of tuples (count,color)
+    -- I need to re-list this to have (count,color) per color
+    -- then do fold to have max per color
+    let reds = listToMaybe $ filter (strEq "red" . snd) kk
+    let greens = listToMaybe $ filter (strEq "green" . snd) kk
+    let blues = listToMaybe $ filter (strEq "blue" . snd) kk
+    trace
+        ("===colors: " ++ show reds)
+        SingleDraft
+        ( Red (maybe 0 fst reds ))
+        ( Green (maybe 0 fst greens))
+        ( Blue (maybe 0 fst blues))
 
 -- getSingleGame :: String -> Game
 getSingleGame game = do
@@ -66,11 +91,11 @@ getSingleGame game = do
     let maxBlue = draftBlue (head drafted)
     Game (GameNumber gameNumber) maxRed maxGreen maxBlue
 
-    -- trace ("end: " ++ show game) $ game
+-- trace ("end: " ++ show game) $ game
 
 -- getGames :: [String] -> [Game]
 getGames games = do
-      trace ("++" ++ show games) $ map getSingleGame games
+    trace ("++" ++ show games) $ map getSingleGame games
 
 someFunc :: IO ()
 someFunc = do
@@ -80,14 +105,13 @@ someFunc = do
     print ""
     print ""
 
-    print ( (getGames (lined)))
+    print ((getGames (lined)))
 
     -- print ""
     -- print (show input)
     -- print "//"
 
     let formatted = format input
-
 
     -- let gameNumbers = map getGameNumber formatted
 
