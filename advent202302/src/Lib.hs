@@ -86,10 +86,10 @@ getSingleGame game = do
     let gameNumber = getGameNumber (head split)
     let colorsPart = head (tail split)
     let drafted = trace ("colors part: " ++ show colorsPart) $ map (getDraft) colorsPart
-    let maxRed = draftRed (head drafted)
-    let maxGreen = draftGreen (head drafted)
-    let maxBlue = draftBlue (head drafted)
-    Game (GameNumber gameNumber) maxRed maxGreen maxBlue
+    let maxRed = foldr max 0 $ map (red . draftRed) drafted 
+    let maxGreen = foldr max 0 $ map (green . draftGreen) drafted
+    let maxBlue = foldr max 0 $ map (blue . draftBlue) drafted
+    Game (GameNumber gameNumber) (Red maxRed) (Green maxGreen) (Blue maxBlue)
 
 -- trace ("end: " ++ show game) $ game
 
