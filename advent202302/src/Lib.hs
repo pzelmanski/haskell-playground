@@ -6,13 +6,6 @@ import Data.Maybe
 import Debug.Trace
 import Utils (removeChar, splitString)
 
--- getGameNumber :: [String] -> Int
--- getGameNumber [] = 0
--- getGameNumber game =
---     read
---         . removeChar ':'
---         $ game !! 2 ::
---         Int
 
 format :: String -> [[String]]
 format input = do
@@ -43,8 +36,13 @@ data SingleDraft = SingleDraft
     }
     deriving (Show)
 
-getGame :: Game
-getGame = Game (GameNumber 6) (Red 4) (Green 3) (Blue 2)
+getBaseGame :: Game
+getBaseGame = Game (GameNumber 6) (Red 12) (Green 13) (Blue 14)
+
+isGamePossible :: Game -> Game -> Bool
+isGamePossible base game = (red . maxRed $ base) >= (red . maxRed $ game)
+    && (blue . maxBlue $ base) >= (blue . maxBlue $ game)
+    && (green . maxGreen $ base) >= (green . maxGreen $ game)
 
 strEq :: String -> String -> Bool
 strEq [] [] = True
@@ -99,23 +97,18 @@ getGames games = do
 
 someFunc :: IO ()
 someFunc = do
-    input <- readFile "input1-test.txt"
+    input <- readFile "input1-prod.txt"
     let lined = lines input
     print lined
     print ""
     print ""
 
-    print ((getGames (lined)))
+    let games = getGames lined
+    print (getGames lined)
 
-    -- print ""
-    -- print (show input)
-    -- print "//"
+    let ww = filter (isGamePossible getBaseGame) games
+    let oo = map (gnumber . gameNumber) ww
+    print (sum oo)
 
-    let formatted = format input
 
-    -- let gameNumbers = map getGameNumber formatted
-
-    -- print gameNumbers
-
-    -- print input
     print "Goodbye"
