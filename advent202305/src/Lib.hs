@@ -52,6 +52,10 @@ splitAndMap pred mapfn input = snm input []
         | pred x = reverse acc : snm xs []
         | otherwise = snm xs (mapfn x : acc)
 
+createSingleCategoryMappings :: CategoryType -> [(Int, Int)]
+createSingleCategoryMappings input = do
+    trace (show input) $ [(1,1)]
+
 --matchCategories :: [[CategoryType]] -> [Int]
 
 answer :: IO ()
@@ -67,20 +71,21 @@ answer = do
     let seedsLine = head lns
     let otherLines = filter (/= "") $ tail lns
 
-    let split = words seedsLine ++ otherLines
-    -- print (readMaybe "123" :: Maybe Int)
-
-    -- print ("Other lines: " ++ show (parseOtherLines otherLines))
 
     let ct =
-            splitAndMap
+            tail $ splitAndMap
                 (\x -> last x == ':')
                 ( \x ->
                     (\[x, y, z] -> CategoryType x y z) $
                         (map read $ words x :: [Int])
                 )
                 otherLines
-    print ct
+                
+    
+    print ([head ct])
+
+    let ss = createSingleCategoryMappings $ head $ head ct
+    print ss
     -- format of data:
     -- destination range start; source range start; range
 
