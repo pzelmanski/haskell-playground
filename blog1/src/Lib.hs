@@ -8,34 +8,49 @@ someFunc :: IO ()
 someFunc = do
     time <- getCurrentTime
     putStrLn
-        ( makeHtml
-            "My page title"
-            $ "My page content;"
-                <> p_ "</br>Timestamp: </br>"
-                <> h1_ (show time)
+        ( render
+            $ makeHtml
+                "My page title"
+            $ append_
+                (Structure "My page content;")
+                ( append_
+                    (p_ "</br>Timestamp: </br>")
+                    (h1_ (show time))
+                )
         )
 
-makeHtml :: String -> String -> String
-makeHtml title content = html_ $ head_ $ title_ title <> body_ content
+makeHtml :: Title -> Structure -> Html
+makeHtml title content =
+    (Html . el "html") $
+        el "head" $
+            el "title" title <> getStructureString (body_ content)
 
-html_ :: String -> String
-html_ = el "html"
+body_ :: Structure -> Structure
+body_ content = Structure $ "<body style='background-color:grey'>" <> getStructureString content <> "</body>"
 
-body_ :: String -> String
-body_ content = "<body style='background-color:grey'>" <> content <> "</body>"
+p_ :: String -> Structure
+p_ = Structure . el "p"
 
-head_ :: String -> String
-head_ = el "head"
-
-title_ :: String -> String
-title_ = el "title"
-
-p_ :: String -> String
-p_ = el "p"
-
-h1_ :: String -> String
-h1_ = el "h1"
+h1_ :: String -> Structure
+h1_ = Structure . el "h1"
 
 el :: String -> String -> String
 el tag content =
     "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
+
+-- 3.3 finished
+
+newtype Html = Html String
+newtype Structure = Structure String
+type Title = String
+
+append_ :: Structure -> Structure -> Structure
+append_ (Structure s1) (Structure s2) = Structure (s1 ++ s2)
+
+getStructureString :: Structure -> String
+getStructureString (Structure s) = s
+
+render :: Html -> String
+render (Html h) = h
+
+-- 3.4 finished
