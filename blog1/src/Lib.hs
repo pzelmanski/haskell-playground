@@ -3,7 +3,7 @@ module Lib (
 ) where
 
 import Data.Time.Clock (getCurrentTime)
-import Html (html_, append_, appendStr_, render, p_, h1_)
+import Html
 
 someFunc :: IO ()
 someFunc = do
@@ -12,12 +12,19 @@ someFunc = do
         ( render
             $ html_
                 "My page title"
-            $ appendStr_
-                "My page content;"
+            $ append_
+                (p_ "My page content.")
+                $ append_
                 ( append_
                     (p_ "</br>Timestamp: </br>")
                     (h1_ (show time))
                 )
+                (ul_
+                      [ p_ "item 1"
+                      , p_ "item 2"
+                      , p_ "item 3"
+                      ]
+                )
         )
 
--- 3.5 done
+-- 3.6 done

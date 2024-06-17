@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Html
+      Html.Internal
       Lib
   other-modules:
       Paths_blog1
