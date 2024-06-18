@@ -6,6 +6,7 @@ import Data.Maybe
 import Debug.Trace
 import Utils (removeChar, splitString)
 
+
 format :: String -> [[String]]
 format input = do
     let result =
@@ -58,18 +59,26 @@ listToTouple :: [String] -> (Int, String)
 listToTouple [x, y] = (read x :: Int, y)
 listToTouple _ = (0, "")
 
+
 getDraft colors = do
+    -- trace ("COLORS: " ++ show colors) $
+    --     SingleDraft (Red 0) (Green 0) (Blue 0)
     let ww = splitString ',' colors
     let kk = map (listToTouple . words) ww
+    -- TODO: I have a list of tuples (count,color)
+    -- I need to re-list this to have (count,color) per color
+    -- then do fold to have max per color
     let reds = listToMaybe $ filter (strEq "red" . snd) kk
     let greens = listToMaybe $ filter (strEq "green" . snd) kk
     let blues = listToMaybe $ filter (strEq "blue" . snd) kk
-    SingleDraft
+    trace
+        ("===colors: " ++ show reds)
+        SingleDraft
         ( Red (maybe 0 fst reds ))
         ( Green (maybe 0 fst greens))
         ( Blue (maybe 0 fst blues))
 
-getSingleGame :: String -> Game
+-- getSingleGame :: String -> Game
 getSingleGame game = do
     let split = map (splitString ';') (splitString ':' game)
     let gameNumber = getGameNumber (head split)
@@ -80,13 +89,19 @@ getSingleGame game = do
     let maxBlue = foldr max 0 $ map (blue . draftBlue) drafted
     Game (GameNumber gameNumber) (Red maxRed) (Green maxGreen) (Blue maxBlue)
 
+-- trace ("end: " ++ show game) $ game
+
+-- getGames :: [String] -> [Game]
 getGames games = do
-    map getSingleGame games
+    trace ("++" ++ show games) $ map getSingleGame games
 
 someFunc :: IO ()
 someFunc = do
     input <- readFile "input1-prod.txt"
     let lined = lines input
+    print lined
+    print ""
+    print ""
 
     let games = getGames lined
     print (getGames lined)
@@ -94,5 +109,6 @@ someFunc = do
     let ww = filter (isGamePossible getBaseGame) games
     let oo = map (gnumber . gameNumber) ww
     print (sum oo)
+
 
     print "Goodbye"
