@@ -5,17 +5,16 @@ import Html.Internal
 parse :: String -> Document
 parse = parseLines [] . lines
 
-
 parseLines :: [String] -> [String] -> Document
-parseLines currentParagraph txts = 
+parseLines currentParagraph txts =
     let
-        paragraph = Paragraph (unlines ( reverse currentParagraph))
-    in
+        paragraph = Paragraph (unlines (reverse currentParagraph))
+     in
         case txts of
             [] -> [paragraph]
-            currentLine : rest -> 
+            currentLine : rest ->
                 if trim currentLine == ""
-                    then 
+                    then
                         paragraph : parseLines [] rest
                     else
                         parseLines (currentLine : currentParagraph) rest

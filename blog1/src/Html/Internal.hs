@@ -34,7 +34,7 @@ h1_ :: String -> Structure
 h1_ = Structure . el "h1" . escape
 
 ul_ :: [Structure] -> Structure
-ul_  = Structure . el "ul" . concatMap (el "li" . getStructureString) 
+ul_ = Structure . el "ul" . concatMap (el "li" . getStructureString)
 
 ol_ :: [Structure] -> Structure
 ol_ = Structure . el "ol" . concatMap (el "li" . getStructureString)
@@ -46,10 +46,10 @@ code_ = Structure . el "pre" . escape
 render :: Html -> String
 render (Html h) = h
 
-
 -- * Utils
-append_ :: Structure -> Structure -> Structure
-append_ (Structure s1) (Structure s2) = Structure (s1 <> s2)
+
+instance Semigroup Structure where
+    (<>) (Structure s1) (Structure s2) = Structure (s1 <> s2)
 
 el :: String -> String -> String
 el tag content =
