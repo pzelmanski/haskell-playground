@@ -2,6 +2,7 @@ module Exercises where
 
 import Html.Internal
 import Prelude hiding (even, odd, replicate)
+import Parser
 
 
 example1 :: Document
@@ -70,3 +71,44 @@ even x =
     if x == 0
         then True
         else odd (x - 1)
+
+
+
+-- -- 4.4 Exercises
+
+data Brightness
+  = Dark
+  | Bright
+
+data EightColor
+  = Black
+  | Red
+  | Green
+  | Yellow
+  | Blue
+  | Magenta
+  | Cyan
+  | White
+
+data AnsiColor
+  = AnsiColor Brightness EightColor
+
+-- Create a function isBright :: AnsiColor -> Bool that checks whether a color is bright
+isBright :: AnsiColor -> Bool
+isBright (AnsiColor b _) = 
+    case b of
+        Bright -> True
+        Dark -> False
+
+isBright2 :: AnsiColor -> Bool
+isBright2 c =
+    case c of
+        AnsiColor Bright _ -> True
+        AnsiColor Dark _ -> False
+        
+
+
+--
+
+test1 mb = maybe id (:) mb []
+

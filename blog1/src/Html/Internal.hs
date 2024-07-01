@@ -8,15 +8,6 @@ newtype Structure = Structure String
 type Title = String
 type Body = String
 
-type Document = [Structure2]
-data Structure2
-    = Heading Natural String
-    | Paragraph String
-    | UnorderedList [String]
-    | OrderedList [String]
-    | CodeBlock [String]
-    deriving (Show)
-
 -- * EDSL
 html_ :: Title -> Structure -> Html
 html_ title content =
