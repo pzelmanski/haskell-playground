@@ -24,6 +24,9 @@ p_ = Structure . el "p" . escape
 h1_ :: String -> Structure
 h1_ = Structure . el "h1" . escape
 
+h_ :: Natural -> String -> Structure
+h_ num = Structure . el ("h" <> show num) . escape
+
 ul_ :: [Structure] -> Structure
 ul_ = Structure . el "ul" . concatMap (el "li" . getStructureString)
 
@@ -33,6 +36,9 @@ ol_ = Structure . el "ol" . concatMap (el "li" . getStructureString)
 code_ :: String -> Structure
 code_ = Structure . el "pre" . escape
 
+empty_ :: Structure
+empty_ = Structure ""
+
 -- * Render
 render :: Html -> String
 render (Html h) = h
@@ -41,6 +47,9 @@ render (Html h) = h
 
 instance Semigroup Structure where
     (<>) (Structure s1) (Structure s2) = Structure (s1 <> s2)
+
+instance Monoid Structure where
+    mempty = empty_
 
 el :: String -> String -> String
 el tag content =
@@ -64,3 +73,9 @@ escape =
                 '\'' -> "&#39;"
                 _ -> [c]
      in concat . map escapeChar
+
+concatStructure :: [Structure] -> Structure
+concatStructure s =
+    case s of
+        [] -> empty_
+        x : xs -> x <> concatStructure xs
