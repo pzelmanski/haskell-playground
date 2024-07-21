@@ -1,4 +1,4 @@
-module Convert where
+module Convert (process) where
 
 import qualified Html
 import qualified Parser
@@ -17,17 +17,19 @@ convertStructure s =
         Parser.CodeBlock c ->
             Html.code_ (unlines c)
 
--- String -> [Structure] -> Html
 convert :: Html.Title -> Parser.Document -> Html.Html
 convert title = Html.html_ title . foldMap convertStructure
+
+process :: Html.Title -> String -> String
+process title = Html.render . convert title . Parser.parse
 
 -- Html.Structure is monoid
 -- List is foldable
 -- foldMap :: (Foldable t, Monoid m) => (a -> m) -> t a -> m
 -- I can think of it as:
--- foldMap :: (Parser.Structure -> Html.Structure) -> [] Structure -> Html.Structure
+-- foldMap :: (mapper :: (Parser.Structure -> Html.Structure) ) -> [] Structure -> Html.Structure
 fm :: [Parser.Structure] -> Html.Structure
-fm document = foldMap convertStructure document
+fm = foldMap convertStructure
 
 -- it's equivallent to
 myFoldMap :: [Parser.Structure] -> Html.Structure
