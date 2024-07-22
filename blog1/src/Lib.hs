@@ -41,16 +41,19 @@ someFunc = do
         -- getContents works in a way that I need to press ctrl-D in order to close the input stream and see the result
         [] -> getContents >>= \input -> putStrLn (process "Title" input) -- get input from stdin, output into stdin
         [inputFile, outputFile] ->
+            let
+                processFile = readFile inputFile >>= \input -> writeFile outputFile $ process "title" input
+            in
             doesFileExist outputFile >>= \exists ->
                 if exists
                     then
                         confirm >>= \answer ->
                             if answer
                                 then
-                                    readFile inputFile >>= \input -> writeFile outputFile $ process "title" input
+                                    processFile
                                 else
                                     putStrLn "Answer was dont override, skipping"
-                    else readFile inputFile >>= \input -> writeFile outputFile $ process "title" input
+                    else processFile
         _ -> putStrLn "message"
 
     time <- getCurrentTime
