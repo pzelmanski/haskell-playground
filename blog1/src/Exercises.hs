@@ -112,3 +112,23 @@ isBright2 c =
 
 test1 mb = maybe id (:) mb []
 
+-- 5.4 exercise
+
+data Options
+  = ConvertSingle SingleInput SingleOutput
+  | ConvertDir FilePath FilePath
+  deriving Show
+
+data SingleInput
+  = Stdin
+  | InputFile FilePath
+  deriving Show
+
+data SingleOutput
+  = Stdout
+  | OutputFile FilePath
+  deriving Show
+
+-- Create implementation of ConvertDir
+
+pConvertDir = ConvertDir <$> InputFile <*> OutputFilet

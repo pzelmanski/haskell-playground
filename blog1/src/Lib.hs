@@ -26,6 +26,13 @@ whenIO condition action =
             True -> action
             False -> pure ()
 
+-- requirements:
+-- --input FILEPATH
+-- --output FILEPATH
+-- the two fallback into stdin and stdout
+-- whe using `convert-dir`, input and output flags are required
+
+
 someFunc :: IO ()
 someFunc = do
     -- get args
